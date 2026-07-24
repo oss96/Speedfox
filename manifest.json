@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "SpeedFox — Time Saved on Video",
+  "version": "2.0.0",
+  "description": "A fox that watches your video speed and tells you exactly how much time you're saving. Lifetime stats, smart speed suggestions, works everywhere.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*", "*://m.youtube.com/*"],
+      "js": ["lib/widget-core.js", "youtube.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "exclude_matches": ["*://www.youtube.com/*", "*://m.youtube.com/*"],
+      "js": ["lib/widget-core.js", "generic.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SpeedFox"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/fox.png"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

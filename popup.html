@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="pop-header">
+    <img class="pop-mascot" src="assets/fox.png" alt="" />
+    <div>
+      <div class="pop-title">speedfox</div>
+      <div class="pop-subtitle">time you got back</div>
+    </div>
+  </div>
+
+  <div class="pop-hero">
+    <div class="pop-hero-value" id="totalHours">0</div>
+    <div class="pop-hero-label">hours saved, all time</div>
+  </div>
+
+  <div class="pop-grid">
+    <div class="pop-card">
+      <div class="pop-card-value" id="weekHours">0h</div>
+      <div class="pop-card-label">this week</div>
+    </div>
+    <div class="pop-card">
+      <div class="pop-card-value" id="videoCount">0</div>
+      <div class="pop-card-label">videos</div>
+    </div>
+  </div>
+
+  <button id="resetBtn" class="pop-reset">Reset</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>

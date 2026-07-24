@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Geist:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  width: 260px;
+  font-family: 'Geist', Arial, sans-serif;
+  background: #0a0a0a;
+  background-image: radial-gradient(circle at 15% 0%, rgba(224,160,106,0.18), transparent 55%);
+  color: #f5f4f2;
+  padding: 16px;
+}
+
+.pop-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.pop-mascot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(224, 160, 106, 0.15);
+  border: 2px solid rgba(255,255,255,0.35);
+}
+
+.pop-title {
+  font-family: 'Special Elite', serif;
+  font-size: 16px;
+}
+
+.pop-subtitle {
+  font-size: 11px;
+  color: rgba(245, 244, 242, 0.5);
+}
+
+.pop-hero {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  padding: 18px 10px;
+  margin-bottom: 12px;
+}
+
+.pop-hero-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #e0a06a;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1px;
+}
+
+.pop-hero-label {
+  font-size: 11.5px;
+  color: rgba(245, 244, 242, 0.6);
+  margin-top: 2px;
+}
+
+.pop-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.pop-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 10px;
+  text-align: center;
+}
+
+.pop-card-value {
+  font-size: 17px;
+  font-weight: 700;
+  color: #8fe0ae;
+}
+
+.pop-card-label {
+  font-size: 10px;
+  color: rgba(245, 244, 242, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+}
+
+.pop-reset {
+  width: 100%;
+  padding: 9px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: rgba(245, 244, 242, 0.6);
+  font-size: 11.5px;
+  cursor: pointer;
+}
+
+.pop-reset:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
