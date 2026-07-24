@@ -12,8 +12,10 @@
   :root{
     --dark:#0a0a0a;
     --text:#1a1a1a;
-    --muted:#767676;
+    --muted:#555555; /* Darkened slightly for better contrast on glass */
     --prompt:#905831;
+    --fox-orange: #d17b36;
+    --fox-green: #379c5c;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{font-family:'Geist', sans-serif; overflow-x:hidden; background:#fff; color:var(--text);}
@@ -63,65 +65,108 @@
   }
   .lead{font-size:19px; font-weight:500; color:var(--muted); max-width:440px; margin-bottom:40px; line-height:1.5;}
 
-  /* frosted glass demo card */
+  /* --- GLASSMORPHISM: Main Widget Card --- */
   .card{
-    position:relative; width:420px; max-width:calc(100vw - 48px);
-    background:rgba(255,255,255,0.07); border:3px solid rgba(255,255,255,0.75);
-    border-radius:36px; backdrop-filter:blur(20px) saturate(140%); -webkit-backdrop-filter:blur(20px) saturate(140%);
-    box-shadow:0 20px 60px rgba(0,0,0,0.35);
-    padding:24px 26px 26px; text-align:left;
+    position:relative; width:440px; max-width:calc(100vw - 48px);
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.7); /* Light catching top edge */
+    border-left: 1px solid rgba(255, 255, 255, 0.7); /* Light catching left edge */
+    border-radius:32px; 
+    box-shadow: 0 24px 48px -12px rgba(0,0,0,0.15), inset 0 0 20px rgba(255, 255, 255, 0.2);
+    padding:32px; text-align:left;
   }
-  .card-head{display:flex; align-items:center; gap:8px; margin-bottom:16px;}
-  .card-head .fox-icon{width:22px; height:22px;}
-  .card-head .card-title{font-family:'Special Elite', serif; font-size:13px; color:rgba(255,255,255,0.8); letter-spacing:0.02em;}
+  .card-head{display:flex; align-items:center; gap:8px; margin-bottom:20px;}
+  .card-head .fox-icon{width:24px; height:24px;}
+  .card-head .card-title{font-family:'Special Elite', serif; font-size:14px; color:var(--muted); letter-spacing:0.02em;}
 
   .speed-row{display:flex; align-items:baseline; gap:8px; margin-bottom:4px;}
-  .speed-val{font-size:38px; font-weight:700; color:#f2c9a0; letter-spacing:-0.02em; font-variant-numeric:tabular-nums;}
-  .speed-label{font-size:12px; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.05em;}
+  .speed-val{font-size:42px; font-weight:700; color:var(--fox-orange); letter-spacing:-0.02em; font-variant-numeric:tabular-nums; transition: color 0.3s;}
+  .speed-label{font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em;}
 
-  input[type="range"]{width:100%; accent-color:#e0a06a; margin:10px 0 18px; cursor:pointer;}
-  .card.saving input[type="range"]{accent-color:#8fe0ae;}
-  .card.saving .speed-val{color:#8fe0ae;}
+  input[type="range"]{width:100%; accent-color:var(--fox-orange); margin:12px 0 24px; cursor:pointer; transition: accent-color 0.3s;}
+  .card.saving input[type="range"]{accent-color:var(--fox-green);}
+  .card.saving .speed-val{color:var(--fox-green);}
 
-  .stat-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px;}
-  .stat{display:flex; flex-direction:column; gap:2px;}
-  .stat-label{font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:rgba(255,255,255,0.55);}
-  .stat-value{font-size:14px; font-weight:600; color:#fafafa; font-variant-numeric:tabular-nums;}
-  .stat-value.save{color:#8fe0ae;}
+  /* Glassmorphism inner inset block */
+  .stat-grid{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:24px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.04);
+    border-radius:20px; padding:20px 16px;
+  }
+  .stat{display:flex; flex-direction:column; gap:4px; text-align:center;}
+  .stat-label{font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted);}
+  .stat-value{font-size:15px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; transition: color 0.3s;}
+  .stat-value.save{color:var(--fox-green);}
 
-  .card .btn-get{width:100%; text-align:center; display:block; font-size:15px; padding:15px;}
+  .card .btn-get{
+    width:100%; text-align:center; display:block; font-size:15px; padding:16px;
+    background:rgba(10, 10, 10, 0.9);
+  }
 
   .fine{font-size:12.5px; color:var(--muted); margin-top:22px; max-width:400px;}
   .fine b{color:var(--text);}
 
+  /* --- GLASSMORPHISM: Grid Steps --- */
   .howto{
-    display:flex; flex-wrap:wrap; justify-content:center; gap:14px;
-    max-width:900px; margin-top:36px;
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:16px;
+    width:100%; max-width:960px; margin-top:48px;
   }
   .how-step{
-    display:flex; align-items:flex-start; gap:10px; text-align:left;
-    width:220px; max-width:100%;
+    background: rgba(255, 255, 255, 0.25); 
+    backdrop-filter: blur(20px) saturate(160%); 
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.4); 
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    border-left: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius:20px;
+    padding:24px 20px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08), inset 0 0 16px rgba(255, 255, 255, 0.1);
+    transition:transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  }
+  .how-step:hover{
+    transform:translateY(-6px); 
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12), inset 0 0 20px rgba(255, 255, 255, 0.3); 
+    background: rgba(255, 255, 255, 0.35);
+    border-color:rgba(255,255,255,0.9);
   }
   .how-num{
-    flex-shrink:0; width:26px; height:26px; border-radius:50%;
-    background:var(--prompt); color:#fff; font-size:12px; font-weight:700;
+    flex-shrink:0; width:32px; height:32px; border-radius:50%;
+    background:var(--prompt); color:#fff; font-size:14px; font-weight:700;
     display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 4px 10px rgba(144, 88, 49, 0.3);
   }
-  .how-step div{font-size:13px; color:var(--muted); line-height:1.45;}
-  .how-step b{color:var(--text); font-weight:600;}
+  .how-step div{font-size:13px; color:var(--text); line-height:1.5;}
+  .how-step b{color:var(--text); font-weight:700; display:block; margin-bottom:4px;}
   .how-code{
-    display:inline-block; margin-top:2px; font-family:monospace; font-size:12px;
-    background:rgba(144,88,49,0.1); color:var(--prompt); padding:2px 7px; border-radius:6px;
+    display:inline-block; margin-top:6px; font-family:monospace; font-size:11px;
+    background: rgba(255, 255, 255, 0.5); /* subtle glass for the code block */
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color:var(--prompt); padding:3px 8px; border-radius:6px; font-weight: 600;
   }
 
-  footer{position:relative; z-index:2; padding:26px 24px 32px; text-align:center;}
-  footer p{font-size:12.5px; color:var(--muted);}
-  footer a{text-decoration:underline; text-underline-offset:2px;}
+  /* Footer */
+  footer{
+    position:relative; z-index:2; padding:32px 24px 40px; 
+    display:flex; justify-content:center; align-items:center; gap:12px; text-align:center;
+  }
+  footer p{font-size:13px; font-weight:500; color:var(--muted); margin:0;}
+  footer a{text-decoration:underline; text-underline-offset:3px; color:var(--text); font-weight:600;}
+  footer a:hover{color:var(--prompt);}
+  
+  .leaf-icon {
+    width:20px; height:20px;
+  }
 
   @media (max-width:760px){
     nav{padding:20px 20px 12px;}
     .brand{font-size:26px;}
     .hero-body{padding:36px 16px 64px;}
+    .stat-grid{padding:16px 10px; gap:8px;}
   }
   :focus-visible{outline:2px solid var(--prompt); outline-offset:2px;}
 </style>
@@ -183,23 +228,23 @@
       <div class="howto">
         <div class="how-step">
           <span class="how-num">1</span>
-          <div><b>Click button up top.</b><br>Zip file land in your Downloads.</div>
+          <div><b>Click button.</b>Zip file land in your Downloads.</div>
         </div>
         <div class="how-step">
           <span class="how-num">2</span>
-          <div><b>Open zip.</b><br>Double-click it. Folder pop out.</div>
+          <div><b>Open zip.</b>Double-click it. Folder pop out.</div>
         </div>
         <div class="how-step">
           <span class="how-num">3</span>
-          <div><b>Type this in Chrome:</b><br><span class="how-code">chrome://extensions</span></div>
+          <div><b>Type in Chrome:</b><span class="how-code">chrome://extensions</span></div>
         </div>
         <div class="how-step">
           <span class="how-num">4</span>
-          <div><b>Flip "Developer mode" on.</b><br>Top-right corner switch.</div>
+          <div><b>Developer mode.</b>Turn on the switch in the top-right corner.</div>
         </div>
         <div class="how-step">
           <span class="how-num">5</span>
-          <div><b>Click "Load unpacked."</b><br>Pick the folder. Fox alive.</div>
+          <div><b>Load unpacked.</b>Pick the extracted folder. Fox alive.</div>
         </div>
       </div>
       <p class="fine">No Chrome Store needed. Chrome just want you to flip one switch first — that's how it treat any extension that not from Store.</p>
@@ -207,21 +252,26 @@
   </div>
 
   <footer>
-    <p>Free fox. Open code. No pay. <a href="#" id="footerGithub">See code</a> · <a href="#" id="footerLicense">MIT license</a></p>
+    <svg class="leaf-icon" viewBox="0 0 24 24" fill="none" stroke="#4bb872" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+      <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+    </svg>
+    <p>Free fox. Open code. No pay. <a href="https://github.com/ayesha-arbi/Speedfox" id="footerGithub" target="_blank">See code on GitHub</a></p>
+    <svg class="leaf-icon" viewBox="0 0 24 24" fill="none" stroke="#4bb872" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);">
+      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+      <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+    </svg>
   </footer>
 </section>
 
 <script>
-  // ---- EDIT THESE once repo is live ----
-  const REPO_URL = "https://github.com/your-username/speedfox";
-  const ZIP_URL = "https://github.com/your-username/speedfox/archive/refs/heads/main.zip";
-  const LICENSE_URL = "https://github.com/your-username/speedfox/blob/main/LICENSE";
-  // ----------------------------------------
+  // GitHub URL linked directly to your repository
+  const REPO_URL = "https://github.com/ayesha-arbi/Speedfox";
+  const ZIP_URL = "https://github.com/ayesha-arbi/Speedfox/archive/refs/heads/main.zip";
 
   document.getElementById('navGet').href = ZIP_URL;
   document.getElementById('cardGet').href = ZIP_URL;
   document.getElementById('footerGithub').href = REPO_URL;
-  document.getElementById('footerLicense').href = LICENSE_URL;
 
   const LECTURE_DURATION = 52 * 60;
   const ELAPSED = 14 * 60;
