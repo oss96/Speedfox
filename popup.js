@@ -1,4 +1,7 @@
 const STATS_KEY = 'speedsaver_stats';
+const OTHER_SITES = { origins: ['*://*/*'] };
+const VIDEO_REFRESH_MS = 1000;
+const Core = window.SpeedSaverCore;
 
 function fmtHoursBig(totalSeconds) {
   const hrs = totalSeconds / 3600;
@@ -30,12 +33,70 @@ function render(stats) {
   document.getElementById('videoCount').textContent = stats.videosTracked || 0;
 }
 
-chrome.storage.local.get([STATS_KEY], (res) => {
-  render(res[STATS_KEY] || { totalSecondsSaved: 0, videosTracked: 0, daily: {} });
+function setText(id, text) {
+  document.getElementById(id).textContent = text;
+}
+
+async function sendToActiveTab(message) {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (tab?.id == null) return null;
+  return chrome.tabs.sendMessage(tab.id, message, { frameId: 0 }).catch(() => null);
+}
+
+function renderVideo(status) {
+  document.getElementById('videoPanel').hidden = !status;
+  document.getElementById('videoEmpty').hidden = !!status;
+  if (!status) return;
+
+  const changed = status.speed !== 1;
+  setText('videoSpeed', Core.fmtSpeed(status.speed));
+  setText('videoFinish', Core.fmtClock(new Date(status.finishAt)));
+  setText('videoLeft', Core.fmtDuration(status.actualRemaining));
+  setText('videoWas', changed ? `(was ${Core.fmtDuration(status.remainingContent)})` : '');
+  setText('videoSaving', changed ? `${Core.fmtDuration(status.remainingSaved)} left to save` : 'Watching at 1×');
+  setText('videoEstimate', changed ? `~${Core.fmtDuration(status.wholeVideoEstimate)} for the whole video at this speed` : '');
+
+  const box = document.getElementById('videoSuggestion');
+  const { suggestion } = status;
+  box.hidden = !suggestion;
+  if (!suggestion) return;
+  const pace = suggestion.suggestedSpeed > status.speed ? 'slow-ish talker' : 'fast talker';
+  setText('videoSuggestionText', `💡 Try ${Core.fmtSpeed(suggestion.suggestedSpeed)} — ${pace}, ~${Math.round(suggestion.wpm)} wpm`);
+  document.getElementById('videoSuggestionApply').onclick = async () => {
+    await sendToActiveTab({ type: 'applySpeed', speed: suggestion.suggestedSpeed });
+    refreshVideo();
+  };
+}
+
+async function refreshVideo() {
+  renderVideo(await sendToActiveTab({ type: 'getVideoStatus' }));
+}
+
+refreshVideo();
+setInterval(refreshVideo, VIDEO_REFRESH_MS);
+
+function loadStats() {
+  chrome.storage.local.get([STATS_KEY], (res) => {
+    render(res[STATS_KEY] || { totalSecondsSaved: 0, videosTracked: 0, daily: {} });
+  });
+}
+
+loadStats();
+
+document.getElementById('resetBtn').addEventListener('click', async () => {
+  await chrome.runtime.sendMessage({ type: 'resetStats' });
+  loadStats();
 });
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  chrome.storage.local.set({ [STATS_KEY]: { totalSecondsSaved: 0, videosTracked: 0, daily: {}, trackedKeys: [] } }, () => {
-    render({ totalSecondsSaved: 0, videosTracked: 0, daily: {} });
-  });
+const otherSitesToggle = document.getElementById('otherSitesToggle');
+
+chrome.permissions.contains(OTHER_SITES).then((granted) => {
+  otherSitesToggle.checked = granted;
+});
+
+otherSitesToggle.addEventListener('change', async () => {
+  const granted = otherSitesToggle.checked
+    ? await chrome.permissions.request(OTHER_SITES)
+    : !(await chrome.permissions.remove(OTHER_SITES));
+  otherSitesToggle.checked = granted;
 });

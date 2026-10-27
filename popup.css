@@ -1,6 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Geist:wght@400;500;600;700&display=swap');
+@font-face {
+  font-family: 'Geist';
+  src: url('fonts/geist-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Special Elite';
+  src: url('fonts/special-elite-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
 
 * { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
@@ -89,6 +103,122 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.3px;
   margin-top: 2px;
+}
+
+.pop-video {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pop-video-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.pop-section-label {
+  font-size: 10px;
+  color: rgba(245, 244, 242, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.pop-video-speed {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e0a06a;
+  font-variant-numeric: tabular-nums;
+}
+
+.pop-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+}
+
+.pop-row-label {
+  color: rgba(245, 244, 242, 0.55);
+}
+
+.pop-row-value {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.pop-saving {
+  color: #8fe0ae;
+  font-weight: 600;
+}
+
+.pop-was,
+.pop-estimate {
+  color: rgba(245, 244, 242, 0.5);
+  font-size: 10.5px;
+  font-weight: 400;
+}
+
+.pop-estimate:empty {
+  display: none;
+}
+
+.pop-suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 7px 9px;
+  border-radius: 12px;
+  background: rgba(224, 160, 106, 0.16);
+  border: 1px solid rgba(224, 160, 106, 0.35);
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: #f0c69a;
+}
+
+.pop-suggestion button {
+  flex-shrink: 0;
+  border: none;
+  background: #0a0a0a;
+  color: #fafafa;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.pop-suggestion button:hover {
+  background: #333;
+}
+
+.pop-video-empty {
+  font-size: 11px;
+  color: rgba(245, 244, 242, 0.45);
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.pop-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  color: rgba(245, 244, 242, 0.75);
+  cursor: pointer;
+}
+
+.pop-toggle input {
+  accent-color: #e0a06a;
+  margin: 0;
 }
 
 .pop-reset {

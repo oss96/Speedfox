@@ -7,7 +7,7 @@
   let video = null;
   let rafId = null;
   let statsInterval = null;
-  let lastTime = 0;
+  let accountant = null;
   let currentVideoKey = null;
 
   // YouTube renders captions itself rather than using native <track> cues,
@@ -64,26 +64,15 @@
 
     if (!video || !video.isConnected) {
       video = findVideo();
-      lastTime = video ? video.currentTime : 0;
       captionTracker = createYoutubeCaptionTracker();
     }
-    if (!video) {
-      widgetEl.style.display = 'none';
-      return;
+    if (accountant?.video !== video) {
+      accountant?.destroy();
+      accountant = video ? Core.createPlaybackAccountant(video) : null;
     }
-
-    const result = Core.updateWidgetStats(widgetEl, video);
-    if (!result) return;
-
-    // Accumulate real time-saved for lifetime stats (ignore seeks/pauses).
-    if (!video.paused && !video.seeking) {
-      const delta = video.currentTime - lastTime;
-      if (delta > 0 && delta < 2) {
-        const saved = delta * (1 - 1 / result.speed);
-        Core.StatsStore.addSavedSeconds(saved);
-      }
-    }
-    lastTime = video.currentTime;
+    const status = Core.videoStatus(video);
+    Core.updateWidget(widgetEl, status);
+    if (!status) return;
 
     const key = videoKeyFromUrl();
     if (key !== currentVideoKey && video.duration > 30) {
@@ -91,29 +80,12 @@
       Core.StatsStore.registerVideoIfNew(key);
     }
 
-    // Caption-based speed suggestion (best-effort).
-    if (captionTracker) {
-      captionTracker.tick();
-      if (captionTracker.available()) {
-        const wpm = captionTracker.getWpm();
-        const suggested = Core.suggestSpeedFromWpm(wpm);
-        if (wpm && suggested) {
-          Core.showSuggestion(widgetEl, { wpm, suggestedSpeed: suggested, currentSpeed: result.speed }, (s) => {
-            video.playbackRate = s;
-          });
-        } else {
-          Core.hideSuggestion(widgetEl);
-        }
-      } else {
-        Core.hideSuggestion(widgetEl);
-      }
-    }
+    captionTracker?.tick();
   }
 
   function init() {
     if (widgetEl) return;
     widgetEl = Core.buildWidget({ mascotUrl: MASCOT_URL });
-    lastTime = 0;
     update();
     statsInterval = setInterval(() => Core.StatsStore.flush(), 5000);
   }
@@ -121,6 +93,8 @@
   function teardown() {
     if (rafId) cancelAnimationFrame(rafId);
     if (statsInterval) clearInterval(statsInterval);
+    accountant?.destroy();
+    accountant = null;
     Core.StatsStore.flush();
     rafId = null;
     statsInterval = null;
@@ -142,6 +116,7 @@
     else teardown();
   }
 
+  Core.serveVideoStatus(() => ({ video, captionTracker }));
   document.addEventListener('yt-navigate-finish', handleNav);
   window.addEventListener('load', handleNav);
   handleNav();
