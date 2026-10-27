@@ -159,6 +159,10 @@
   border: 1px solid rgba(224, 160, 106, 0.35);
 }
 
+#speedsaver-widget .ss-suggestion[hidden] {
+  display: none;
+}
+
 #speedsaver-widget .ss-suggestion-text {
   font-size: 10.5px;
   line-height: 1.3;
