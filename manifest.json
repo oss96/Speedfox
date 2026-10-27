@@ -1,24 +1,21 @@
 {
   "manifest_version": 3,
   "name": "SpeedFox — Time Saved on Video",
-  "version": "2.0.0",
-  "description": "A fox that watches your video speed and tells you exactly how much time you're saving. Lifetime stats, smart speed suggestions, works everywhere.",
-  "permissions": ["storage"],
+  "version": "2.1.0",
+  "description": "A fox that watches your video speed and tells you exactly how much time you're saving. Lifetime stats, smart speed suggestions, on YouTube and any video site you allow.",
+  "permissions": ["storage", "scripting"],
   "host_permissions": [
-    "*://*.youtube.com/*",
-    "*://*/*"
+    "*://www.youtube.com/*",
+    "*://m.youtube.com/*"
   ],
+  "optional_host_permissions": ["*://*/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["*://www.youtube.com/*", "*://m.youtube.com/*"],
       "js": ["lib/widget-core.js", "youtube.js"],
-      "css": ["content.css"],
-      "run_at": "document_idle"
-    },
-    {
-      "matches": ["<all_urls>"],
-      "exclude_matches": ["*://www.youtube.com/*", "*://m.youtube.com/*"],
-      "js": ["lib/widget-core.js", "generic.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
     }
@@ -29,8 +26,8 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["assets/fox.png"],
-      "matches": ["<all_urls>"]
+      "resources": ["assets/fox.png", "fonts/*.woff2"],
+      "matches": ["*://*/*"]
     }
   ],
   "icons": {

@@ -7,7 +7,7 @@
   let video = null;
   let rafId = null;
   let statsInterval = null;
-  let lastTime = 0;
+  let accountant = null;
   let currentVideoKey = null;
 
   // YouTube renders captions itself rather than using native <track> cues,
@@ -64,8 +64,11 @@
 
     if (!video || !video.isConnected) {
       video = findVideo();
-      lastTime = video ? video.currentTime : 0;
       captionTracker = createYoutubeCaptionTracker();
+    }
+    if (accountant?.video !== video) {
+      accountant?.destroy();
+      accountant = video ? Core.createPlaybackAccountant(video) : null;
     }
     if (!video) {
       widgetEl.style.display = 'none';
@@ -74,16 +77,6 @@
 
     const result = Core.updateWidgetStats(widgetEl, video);
     if (!result) return;
-
-    // Accumulate real time-saved for lifetime stats (ignore seeks/pauses).
-    if (!video.paused && !video.seeking) {
-      const delta = video.currentTime - lastTime;
-      if (delta > 0 && delta < 2) {
-        const saved = delta * (1 - 1 / result.speed);
-        Core.StatsStore.addSavedSeconds(saved);
-      }
-    }
-    lastTime = video.currentTime;
 
     const key = videoKeyFromUrl();
     if (key !== currentVideoKey && video.duration > 30) {
@@ -113,7 +106,6 @@
   function init() {
     if (widgetEl) return;
     widgetEl = Core.buildWidget({ mascotUrl: MASCOT_URL });
-    lastTime = 0;
     update();
     statsInterval = setInterval(() => Core.StatsStore.flush(), 5000);
   }
@@ -121,6 +113,8 @@
   function teardown() {
     if (rafId) cancelAnimationFrame(rafId);
     if (statsInterval) clearInterval(statsInterval);
+    accountant?.destroy();
+    accountant = null;
     Core.StatsStore.flush();
     rafId = null;
     statsInterval = null;

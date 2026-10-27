@@ -1,4 +1,5 @@
 const STATS_KEY = 'speedsaver_stats';
+const OTHER_SITES = { origins: ['*://*/*'] };
 
 function fmtHoursBig(totalSeconds) {
   const hrs = totalSeconds / 3600;
@@ -30,12 +31,28 @@ function render(stats) {
   document.getElementById('videoCount').textContent = stats.videosTracked || 0;
 }
 
-chrome.storage.local.get([STATS_KEY], (res) => {
-  render(res[STATS_KEY] || { totalSecondsSaved: 0, videosTracked: 0, daily: {} });
+function loadStats() {
+  chrome.storage.local.get([STATS_KEY], (res) => {
+    render(res[STATS_KEY] || { totalSecondsSaved: 0, videosTracked: 0, daily: {} });
+  });
+}
+
+loadStats();
+
+document.getElementById('resetBtn').addEventListener('click', async () => {
+  await chrome.runtime.sendMessage({ type: 'resetStats' });
+  loadStats();
 });
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  chrome.storage.local.set({ [STATS_KEY]: { totalSecondsSaved: 0, videosTracked: 0, daily: {}, trackedKeys: [] } }, () => {
-    render({ totalSecondsSaved: 0, videosTracked: 0, daily: {} });
-  });
+const otherSitesToggle = document.getElementById('otherSitesToggle');
+
+chrome.permissions.contains(OTHER_SITES).then((granted) => {
+  otherSitesToggle.checked = granted;
+});
+
+otherSitesToggle.addEventListener('change', async () => {
+  const granted = otherSitesToggle.checked
+    ? await chrome.permissions.request(OTHER_SITES)
+    : !(await chrome.permissions.remove(OTHER_SITES));
+  otherSitesToggle.checked = granted;
 });

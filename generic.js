@@ -8,7 +8,7 @@
   let video = null;
   let rafId = null;
   let statsInterval = null;
-  let lastTime = 0;
+  let accountant = null;
   let captionTracker = null;
   let currentVideoKey = null;
 
@@ -35,8 +35,12 @@
 
     if (!video || !video.isConnected) {
       video = pickBestVideo();
-      lastTime = video ? video.currentTime : 0;
+      captionTracker?.destroy();
       captionTracker = video ? Core.createNativeCaptionRateTracker(video) : null;
+    }
+    if (accountant?.video !== video) {
+      accountant?.destroy();
+      accountant = video ? Core.createPlaybackAccountant(video) : null;
     }
     if (!video) {
       widgetEl.style.display = 'none';
@@ -45,14 +49,6 @@
 
     const result = Core.updateWidgetStats(widgetEl, video);
     if (!result) return;
-
-    if (!video.paused && !video.seeking) {
-      const delta = video.currentTime - lastTime;
-      if (delta > 0 && delta < 2) {
-        Core.StatsStore.addSavedSeconds(delta * (1 - 1 / result.speed));
-      }
-    }
-    lastTime = video.currentTime;
 
     const key = keyForVideo(video);
     if (key !== currentVideoKey) {
@@ -85,6 +81,9 @@
   function teardown() {
     if (rafId) cancelAnimationFrame(rafId);
     if (statsInterval) clearInterval(statsInterval);
+    accountant?.destroy();
+    accountant = null;
+    captionTracker?.destroy();
     Core.StatsStore.flush();
     rafId = null;
     statsInterval = null;

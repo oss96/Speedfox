@@ -1,4 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Geist:wght@400;500;600;700&display=swap');
+@font-face {
+  font-family: 'Geist';
+  src: url('fonts/geist-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Special Elite';
+  src: url('fonts/special-elite-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
 
 * { box-sizing: border-box; }
 
@@ -89,6 +101,21 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.3px;
   margin-top: 2px;
+}
+
+.pop-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  color: rgba(245, 244, 242, 0.75);
+  cursor: pointer;
+}
+
+.pop-toggle input {
+  accent-color: #e0a06a;
+  margin: 0;
 }
 
 .pop-reset {
