@@ -5,6 +5,8 @@ const MAX_TRACKED_KEYS = 500;
 const GENERIC_SCRIPT_ID = 'speedfox-generic';
 const OTHER_SITES = { origins: ['*://*/*'] };
 const YOUTUBE_MATCHES = ['*://www.youtube.com/*', '*://m.youtube.com/*'];
+const YOUTUBE_HOSTS = ['www.youtube.com', 'm.youtube.com'];
+const GENERIC_JS = ['lib/widget-core.js', 'generic.js'];
 
 function emptyStats() {
   return { totalSecondsSaved: 0, videosTracked: 0, daily: {}, trackedKeys: [] };
@@ -85,7 +87,7 @@ async function syncGenericScript() {
       id: GENERIC_SCRIPT_ID,
       matches: OTHER_SITES.origins,
       excludeMatches: YOUTUBE_MATCHES,
-      js: ['lib/widget-core.js', 'generic.js'],
+      js: GENERIC_JS,
       css: ['content.css'],
       runAt: 'document_idle',
     }]);
@@ -94,15 +96,34 @@ async function syncGenericScript() {
   }
 }
 
+async function injectGenericDriver(tabId) {
+  const target = { tabId };
+  const [{ result: alreadyLoaded }] = await chrome.scripting.executeScript({ target, func: () => !!window.SpeedSaverCore });
+  if (alreadyLoaded) return;
+  await chrome.scripting.insertCSS({ target, files: ['content.css'] });
+  await chrome.scripting.executeScript({ target, files: GENERIC_JS });
+}
+
+/** Starts the generic driver in tabs that were already open when access was granted. */
+async function injectIntoOpenTabs() {
+  if (!(await chrome.permissions.contains(OTHER_SITES))) return;
+  const tabs = await chrome.tabs.query({ url: OTHER_SITES.origins });
+  const otherSiteTabs = tabs.filter((tab) => !YOUTUBE_HOSTS.includes(new URL(tab.url).hostname));
+  await Promise.allSettled(otherSiteTabs.map((tab) => injectGenericDriver(tab.id)));
+}
+
 let syncQueue = Promise.resolve();
 
-function queueGenericScriptSync() {
+function queueSiteAccessTask(task) {
   syncQueue = syncQueue
-    .then(syncGenericScript)
+    .then(task)
     .catch((err) => console.error('SpeedFox site access sync failed', err));
 }
 
-chrome.runtime.onInstalled.addListener(queueGenericScriptSync);
-chrome.runtime.onStartup.addListener(queueGenericScriptSync);
-chrome.permissions.onAdded.addListener(queueGenericScriptSync);
-chrome.permissions.onRemoved.addListener(queueGenericScriptSync);
+chrome.runtime.onInstalled.addListener(() => queueSiteAccessTask(syncGenericScript));
+chrome.runtime.onStartup.addListener(() => queueSiteAccessTask(syncGenericScript));
+chrome.permissions.onAdded.addListener(() => {
+  queueSiteAccessTask(syncGenericScript);
+  queueSiteAccessTask(injectIntoOpenTabs);
+});
+chrome.permissions.onRemoved.addListener(() => queueSiteAccessTask(syncGenericScript));

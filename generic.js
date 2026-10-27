@@ -42,32 +42,14 @@
       accountant?.destroy();
       accountant = video ? Core.createPlaybackAccountant(video) : null;
     }
-    if (!video) {
-      widgetEl.style.display = 'none';
-      return;
-    }
-
-    const result = Core.updateWidgetStats(widgetEl, video);
-    if (!result) return;
+    const status = Core.videoStatus(video);
+    Core.updateWidget(widgetEl, status);
+    if (!status) return;
 
     const key = keyForVideo(video);
     if (key !== currentVideoKey) {
       currentVideoKey = key;
       Core.StatsStore.registerVideoIfNew(key);
-    }
-
-    if (captionTracker && captionTracker.available()) {
-      const wpm = captionTracker.getWpm();
-      const suggested = Core.suggestSpeedFromWpm(wpm);
-      if (wpm && suggested) {
-        Core.showSuggestion(widgetEl, { wpm, suggestedSpeed: suggested, currentSpeed: result.speed }, (s) => {
-          video.playbackRate = s;
-        });
-      } else {
-        Core.hideSuggestion(widgetEl);
-      }
-    } else {
-      Core.hideSuggestion(widgetEl);
     }
   }
 
@@ -95,6 +77,8 @@
     captionTracker = null;
     currentVideoKey = null;
   }
+
+  Core.serveVideoStatus(() => ({ video, captionTracker }));
 
   // Watch for a qualifying video appearing/disappearing on the page.
   const observer = new MutationObserver(() => {

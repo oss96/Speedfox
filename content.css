@@ -3,184 +3,54 @@
   right: 20px;
   bottom: 88px;
   z-index: 2147483647;
-  width: 216px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px 2px 2px;
   font-family: 'Geist', Arial, sans-serif;
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 2px solid rgba(255, 255, 255, 0.55);
-  border-radius: 22px;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0,0,0,0.15);
-  color: #f5f4f2;
-  overflow: hidden;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: #e0a06a;
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 100px;
+  opacity: 0.6;
+  cursor: grab;
   user-select: none;
-  transition: box-shadow 0.2s ease;
+  transition: opacity 0.2s ease;
+}
+
+#speedsaver-widget:hover,
+#speedsaver-widget.ss-dragging {
+  opacity: 1;
 }
 
 #speedsaver-widget.ss-dragging {
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.6);
-}
-
-#speedsaver-widget .ss-drag-handle {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 10px 12px;
-  cursor: grab;
-  background: rgba(255, 255, 255, 0.04);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-#speedsaver-widget .ss-drag-handle:active {
   cursor: grabbing;
+}
+
+#speedsaver-widget.ss-saving {
+  color: #8fe0ae;
 }
 
 #speedsaver-widget .ss-dot {
   width: 7px;
   height: 7px;
+  margin: 3px;
   border-radius: 50%;
   background: #c17a45;
-  box-shadow: 0 0 6px rgba(193, 122, 69, 0.8);
   flex-shrink: 0;
 }
 
 #speedsaver-widget .ss-mascot {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.15);
-}
-
-#speedsaver-widget .ss-title {
-  font-family: 'Special Elite', serif;
-  font-size: 12px;
-  letter-spacing: 0.3px;
-  color: rgba(245, 244, 242, 0.75);
-  flex: 1;
-}
-
-#speedsaver-widget .ss-min-btn {
-  border: none;
-  background: transparent;
-  color: rgba(245, 244, 242, 0.6);
-  font-size: 15px;
-  line-height: 1;
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-#speedsaver-widget .ss-min-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-}
-
-#speedsaver-widget .ss-body {
-  padding: 13px 13px 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-#speedsaver-widget.ss-minimized .ss-body {
-  display: none;
-}
-
-#speedsaver-widget.ss-minimized {
-  width: auto;
-}
-
-#speedsaver-widget .ss-speed-row {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-#speedsaver-widget .ss-speed-value {
-  font-size: 25px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: #e0a06a;
-  letter-spacing: -0.5px;
-}
-
-#speedsaver-widget.ss-saving .ss-speed-value {
-  color: #8fe0ae;
-}
-
-#speedsaver-widget .ss-speed-label {
-  font-size: 11px;
-  color: rgba(245, 244, 242, 0.55);
-}
-
-#speedsaver-widget .ss-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-#speedsaver-widget .ss-stat-label {
-  font-size: 10.5px;
-  color: rgba(245, 244, 242, 0.55);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-#speedsaver-widget .ss-stat-value {
-  font-size: 13px;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  color: #f5f4f2;
-}
-
-#speedsaver-widget .ss-was {
-  color: rgba(245, 244, 242, 0.5);
-  font-weight: 400;
-  font-size: 11.5px;
-}
-
-#speedsaver-widget .ss-highlight .ss-stat-value {
-  color: #8fe0ae;
-  font-weight: 600;
-}
-
-#speedsaver-widget .ss-suggestion {
-  margin-top: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  padding: 7px 9px;
-  border-radius: 12px;
-  background: rgba(224, 160, 106, 0.16);
-  border: 1px solid rgba(224, 160, 106, 0.35);
-}
-
-#speedsaver-widget .ss-suggestion[hidden] {
-  display: none;
-}
-
-#speedsaver-widget .ss-suggestion-text {
-  font-size: 10.5px;
-  line-height: 1.3;
-  color: #f0c69a;
-}
-
-#speedsaver-widget .ss-suggestion-btn {
-  flex-shrink: 0;
-  border: none;
-  background: #0a0a0a;
-  color: #fafafa;
-  font-size: 10.5px;
-  font-weight: 600;
-  padding: 5px 10px;
-  border-radius: 100px;
-  cursor: pointer;
-}
-
-#speedsaver-widget .ss-suggestion-btn:hover {
-  background: #333;
+  pointer-events: none;
 }

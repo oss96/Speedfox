@@ -70,13 +70,9 @@
       accountant?.destroy();
       accountant = video ? Core.createPlaybackAccountant(video) : null;
     }
-    if (!video) {
-      widgetEl.style.display = 'none';
-      return;
-    }
-
-    const result = Core.updateWidgetStats(widgetEl, video);
-    if (!result) return;
+    const status = Core.videoStatus(video);
+    Core.updateWidget(widgetEl, status);
+    if (!status) return;
 
     const key = videoKeyFromUrl();
     if (key !== currentVideoKey && video.duration > 30) {
@@ -84,23 +80,7 @@
       Core.StatsStore.registerVideoIfNew(key);
     }
 
-    // Caption-based speed suggestion (best-effort).
-    if (captionTracker) {
-      captionTracker.tick();
-      if (captionTracker.available()) {
-        const wpm = captionTracker.getWpm();
-        const suggested = Core.suggestSpeedFromWpm(wpm);
-        if (wpm && suggested) {
-          Core.showSuggestion(widgetEl, { wpm, suggestedSpeed: suggested, currentSpeed: result.speed }, (s) => {
-            video.playbackRate = s;
-          });
-        } else {
-          Core.hideSuggestion(widgetEl);
-        }
-      } else {
-        Core.hideSuggestion(widgetEl);
-      }
-    }
+    captionTracker?.tick();
   }
 
   function init() {
@@ -136,6 +116,7 @@
     else teardown();
   }
 
+  Core.serveVideoStatus(() => ({ video, captionTracker }));
   document.addEventListener('yt-navigate-finish', handleNav);
   window.addEventListener('load', handleNav);
   handleNav();

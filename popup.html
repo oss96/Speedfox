@@ -29,6 +29,31 @@
     </div>
   </div>
 
+  <div class="pop-video" id="videoPanel" hidden>
+    <div class="pop-video-head">
+      <span class="pop-section-label">this video</span>
+      <span class="pop-video-speed" id="videoSpeed">1×</span>
+    </div>
+    <div class="pop-row">
+      <span class="pop-row-label">Finishes at</span>
+      <span class="pop-row-value" id="videoFinish">—</span>
+    </div>
+    <div class="pop-row">
+      <span class="pop-row-label">Time left</span>
+      <span class="pop-row-value"><span id="videoLeft">—</span> <span class="pop-was" id="videoWas"></span></span>
+    </div>
+    <div class="pop-row">
+      <span class="pop-row-label">Saving</span>
+      <span class="pop-row-value pop-saving" id="videoSaving">—</span>
+    </div>
+    <div class="pop-estimate" id="videoEstimate"></div>
+    <div class="pop-suggestion" id="videoSuggestion" hidden>
+      <span id="videoSuggestionText"></span>
+      <button id="videoSuggestionApply">Apply</button>
+    </div>
+  </div>
+  <div class="pop-video-empty" id="videoEmpty" hidden>No video in this tab</div>
+
   <label class="pop-toggle">
     <input type="checkbox" id="otherSitesToggle" />
     <span>Also run on other video sites</span>
@@ -36,6 +61,7 @@
 
   <button id="resetBtn" class="pop-reset">Reset</button>
 
+  <script src="lib/widget-core.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
