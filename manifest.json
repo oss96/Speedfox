@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SpeedFox — Time Saved on Video",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A fox that watches your video speed and tells you exactly how much time you're saving. Lifetime stats, smart speed suggestions, on YouTube and any video site you allow.",
   "permissions": ["storage", "scripting"],
   "host_permissions": [

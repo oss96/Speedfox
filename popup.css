@@ -221,7 +221,13 @@ body {
   margin: 0;
 }
 
-.pop-reset {
+.pop-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pop-btn {
   width: 100%;
   padding: 9px;
   border-radius: 100px;
@@ -232,7 +238,7 @@ body {
   cursor: pointer;
 }
 
-.pop-reset:hover {
+.pop-btn:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
 }
