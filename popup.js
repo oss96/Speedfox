@@ -83,6 +83,30 @@ function loadStats() {
 
 loadStats();
 
+function localDateKey(date) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function downloadJson(filename, data) {
+  const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  chrome.storage.local.get([STATS_KEY], (res) => {
+    const now = new Date();
+    downloadJson(`speedfox-stats-${localDateKey(now)}.json`, {
+      exportedAt: now.toISOString(),
+      stats: res[STATS_KEY] || { totalSecondsSaved: 0, videosTracked: 0, daily: {}, trackedKeys: [] },
+    });
+  });
+});
+
 document.getElementById('resetBtn').addEventListener('click', async () => {
   await chrome.runtime.sendMessage({ type: 'resetStats' });
   loadStats();

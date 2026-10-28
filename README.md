@@ -15,7 +15,7 @@ from source.
   popup to add generic HTML5 `<video>` anywhere else: Udemy, Coursera,
   Vimeo, plain web video.
 - Lifetime stats in the same popup: total hours saved, this week,
-  videos tracked.
+  videos tracked. Export saves all stats to a JSON file.
 - Smart speed suggestions from caption pace in the popup, when captions
   are on.
 - Fox mascot, frosted glass look, Geist + Special Elite fonts bundled
